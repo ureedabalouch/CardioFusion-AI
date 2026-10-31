@@ -1,166 +1,175 @@
 # CardioFusion AI 🫀
 
-**Deep Learning-Based ECG Classification Using Signal CNN and ConvNeXt-Tiny**
+### Deep Learning-Based ECG Classification Using Signal CNN and ConvNeXt-Tiny
 
-CardioFusion AI is a deep learning project that classifies 12-lead electrocardiogram (ECG) data into two categories: **Normal** and **Abnormal**. The project explores two approaches to ECG classification: learning from raw ECG signals and learning from ECG waveform images.
+CardioFusion AI is an academic deep learning project that classifies 12-lead electrocardiogram (ECG) records into two categories: **Normal** and **Abnormal**. It explores two separate approaches: learning from numerical ECG signals and learning from ECG waveform images.
 
-> **Disclaimer:** CardioFusion AI is an academic project and is not intended to replace professional medical advice, clinical diagnosis, or evaluation by a qualified healthcare professional.
+> **Disclaimer:** This project is intended for academic research and educational purposes only. It is not a medical device and must not be used as a substitute for professional medical advice, diagnosis, or treatment.
 
 ## 📌 Project Overview
 
-Electrocardiograms (ECGs) are used to record the electrical activity of the heart. Deep learning can help identify patterns in ECG data and support research into automated ECG classification.
+Electrocardiograms record the electrical activity of the heart. Deep learning models can learn patterns from ECG data and support research into automated ECG classification.
 
-CardioFusion AI uses two separate deep learning models:
+CardioFusion AI explores two model architectures:
 
-1. **Signal CNN** — processes 12-lead ECG signal data.
-2. **ConvNeXt-Tiny** — processes images of ECG waveforms.
+- **Signal CNN:** Processes numerical 12-lead ECG signals.
+- **ConvNeXt-Tiny:** Processes images of ECG waveforms.
 
-Both models target binary classification: Normal vs. Abnormal. Their predictions and evaluation results will be assessed separately.
+Both models address the same binary classification task but use different input formats. They are trained and evaluated separately; this project does not claim that a multimodal fusion model has been implemented.
 
-## 🎯 Objectives
+## 🎯 Project Objectives
 
-- Develop a deep learning model for 12-lead ECG signal classification.
-- Train an image-based model using ECG waveform images.
-- Compare signal-based and image-based classification approaches.
-- Evaluate model performance using appropriate classification metrics.
-- Develop a web interface to demonstrate the project.
-- Document the dataset, training process, model architecture, and evaluation.
+- Develop a deep learning model for numerical ECG signal classification.
+- Explore image-based ECG classification.
+- Compare signal-based and image-based approaches.
+- Evaluate model performance using classification metrics.
+- Provide a backend API for ECG predictions.
+- Document the dataset, model artifacts, results, and setup instructions.
 
 ## 🧠 Models
 
 ### 1. Signal CNN
 
-The Signal CNN learns patterns directly from numerical ECG signals.
+The Signal CNN learns patterns directly from numerical ECG recordings.
 
 - **Input:** 12-lead ECG signal.
-- **Expected signal shape:** 1000 time steps × 12 leads before model preprocessing.
-- **Model input format:** 12 leads × 1000 time steps.
+- **Expected raw record shape:** 1000 time steps × 12 leads.
 - **Task:** Binary classification.
 - **Output classes:** Normal and Abnormal.
+- **Checkpoint:** `models/signal_cnn/best_model.pth`
 
 ### 2. ConvNeXt-Tiny
 
-ConvNeXt-Tiny is an image-based deep learning architecture used to learn visual patterns from ECG waveform images.
+ConvNeXt-Tiny is a convolutional neural network architecture used to learn visual patterns from ECG waveform images.
 
 - **Input:** ECG waveform image.
-- **Image preprocessing:** Resize, center crop, and ImageNet normalization.
-- **Model:** ConvNeXt-Tiny.
+- **Preprocessing:** Image resizing, cropping, and normalization.
 - **Task:** Binary classification.
 - **Output classes:** Normal and Abnormal.
+- **Checkpoint hosting:** [Hugging Face — CardioFusion ConvNeXt-Tiny](https://huggingface.co/ureedabalouch/cardiofusion-convnext-tiny)
 
-The two models use different input modalities and should be evaluated independently before comparing their performance.
+The ConvNeXt-Tiny checkpoint is hosted on Hugging Face to avoid storing another large model file in the GitHub repository. Follow the model documentation for checkpoint access and setup.
 
 ## 📊 Dataset
 
-This project uses the **PTB-XL ECG dataset**, a publicly available collection of electrocardiogram records.
+CardioFusion AI uses the **PTB-XL ECG dataset**, available through PhysioNet.
 
-- **Dataset name:** PTB-XL
-- **Source:** PhysioNet
-- **Records:** 21,799 ECG records in the original dataset.
-- **Selected task:** Normal vs. Abnormal classification.
-- **Signal data:** 12-lead ECG recordings.
-- **Image data:** ECG waveform images generated for image-based model training.
+- **Dataset:** PTB-XL
+- **Original dataset size:** 21,799 ECG records.
+- **Signal format:** 12-lead ECG recordings.
+- **Classification task:** Normal vs. Abnormal.
+- **Use in this project:** Signal-based and image-based model development.
 
 **Official dataset:** https://physionet.org/content/ptb-xl/
 
-The project uses a processed manifest to associate ECG records with binary labels and dataset splits. The exact inclusion and exclusion criteria should be documented alongside the final dataset manifest.
+The project uses processed labels and data splits for the binary classification task. The original dataset should be obtained from its official source and handled according to its applicable licence and terms.
 
-### Dataset handling
+The full raw dataset and generated ECG image collection are not included in this repository.
 
-The original PTB-XL data should be obtained from its official source and used according to its license and terms. This repository is intended to contain project code, documentation, and model artifacts rather than an unnecessary duplicate of the full raw dataset.
+## 📈 Model Evaluation
 
-## ⚙️ Technology Stack
+The models are evaluated using metrics appropriate for binary classification, including accuracy, Macro-F1, and area under the receiver operating characteristic curve (AUROC).
 
-The project may use the following technologies, depending on the final repository contents:
+### Signal CNN
 
-- **Python**
-- **PyTorch**
-- **Torchvision**
-- **NumPy**
-- **Pandas**
-- **scikit-learn**
-- **WFDB**
-- **Pillow**
-- **React / TypeScript** for the web interface, if included
+| Metric | Reported result |
+|---|---:|
+| Accuracy | 84.53% |
+| Macro-F1 | 84.45% |
+| AUROC | 92.30% |
 
-The final dependency files should reflect the packages actually required by the published code.
+### ConvNeXt-Tiny
+
+| Metric | Preliminary result |
+|---|---:|
+| Accuracy | 78.64% |
+| Macro-F1 | 77.14% |
+| AUROC | 89.65% |
+
+**Important:** The ConvNeXt-Tiny results are preliminary and require class-mapping verification before being treated as final. The results should not be considered a definitive comparison until the evaluation labels, predictions, and metric calculations have been checked consistently.
+
+These figures represent experimental model performance, not clinical validation.
 
 ## 🔄 Project Workflow
 
 1. Obtain the PTB-XL dataset.
-2. Read ECG records and their metadata.
-3. Prepare binary Normal and Abnormal labels.
-4. Create training, validation, and test splits.
-5. Preprocess ECG signals for Signal CNN.
+2. Read ECG recordings and metadata.
+3. Prepare Normal and Abnormal labels.
+4. Prepare training, validation, and test splits.
+5. Preprocess numerical signals for Signal CNN.
 6. Generate and preprocess ECG waveform images for ConvNeXt-Tiny.
-7. Train the two models separately.
-8. Evaluate each model on the appropriate held-out test set.
-9. Save the trained model weights.
-10. Integrate the models into the project interface or prediction API.
-11. Document results and limitations.
-
-## 📈 Evaluation
-
-Model performance should be evaluated on a held-out test set. The following metrics are suitable for the binary classification task:
-
-- Accuracy
-- Precision
-- Recall / sensitivity
-- Specificity
-- Macro F1-score
-- ROC-AUC
-- Confusion matrix
-
-Final metric values should be added only after evaluating the correct saved checkpoints. Results from one architecture must not be attributed to another.
+7. Train the models separately.
+8. Evaluate the models using held-out test data.
+9. Save and document the selected model checkpoints.
+10. Integrate model inference into the backend API.
+11. Review evaluation results and document limitations.
 
 ## 📁 Repository Structure
 
-The repository is intended to follow this structure as the project files are added:
+The repository is organized to keep essential application code, model artifacts, and documentation in one place without uploading the complete dataset or unnecessary training files.
 
 ```text
 CardioFusion-AI/
-├── README.md
 ├── backend/
-│   ├── models/
-│   └── prediction_service.py
-├── models/
-│   ├── signal_cnn/
-│   │   └── best_model.pth
-│   └── convnext_tiny/
-│       └── best_model.pth
+│   ├── main.py
+│   ├── model_architectures.py
+│   ├── prediction_service.py
+│   └── requirements.txt
 ├── data/
 │   └── README.md
-├── notebooks/
+├── models/
+│   ├── convnext_tiny/
+│   │   └── README.md
+│   └── signal_cnn/
+│       ├── README.md
+│       └── best_model.pth
 ├── results/
-├── docs/
-├── requirements.txt
-└── .gitignore
+│   └── README.md
+└── README.md
 ```
 
-*The structure is a planned layout; files should be added only when they exist and are ready to publish.*
+### Folder descriptions
+
+- `backend/` — API application, prediction service, model architecture code, and Python dependencies.
+- `data/` — Documentation about the dataset and data handling.
+- `models/signal_cnn/` — Signal CNN checkpoint and model documentation.
+- `models/convnext_tiny/` — Documentation and instructions for accessing the hosted ConvNeXt-Tiny checkpoint.
+- `results/` — Documentation of evaluation results and related artifacts.
+- `README.md` — Main project overview and setup guide.
+
+## ⚙️ Technology Stack
+
+- Python
+- PyTorch
+- Torchvision
+- FastAPI
+- NumPy
+- Pandas
+- scikit-learn
+- WFDB
+- Pillow
+- Hugging Face for external model checkpoint hosting
+
+The installed packages required by the backend are listed in `backend/requirements.txt`.
 
 ## 🚀 Getting Started
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/CardioFusion-AI.git
+git clone https://github.com/ureedabalouch/CardioFusion-AI.git
 cd CardioFusion-AI
 ```
 
-Replace `YOUR-USERNAME` with your GitHub username.
-
-### 2. Set up Python
-
-Create and activate a virtual environment:
+### 2. Create a virtual environment
 
 ```bash
 python -m venv .venv
 ```
 
-On Windows:
+Activate it on Windows:
 
-```bash
+```powershell
 .venv\Scripts\activate
 ```
 
@@ -170,51 +179,73 @@ On Linux or macOS:
 source .venv/bin/activate
 ```
 
-### 3. Install dependencies
+### 3. Install backend dependencies
 
-After the project’s `requirements.txt` has been prepared:
+From the repository root, run:
 
 ```bash
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 ```
 
-### 4. Obtain the dataset
+### 4. Configure model checkpoints
 
-Download PTB-XL from the official PhysioNet page and follow the project's documented data preparation instructions.
+- Confirm that the Signal CNN checkpoint is present at `models/signal_cnn/best_model.pth`.
+- Follow `models/convnext_tiny/README.md` to access the hosted ConvNeXt-Tiny checkpoint.
+- Ensure the backend's configured checkpoint paths match the actual locations.
 
-### 5. Run the project
+### 5. Start the API
 
-Detailed training and inference commands will be documented after the final scripts, checkpoints, and dependencies have been added to the repository.
+Run the following command from the `backend/` directory, assuming the FastAPI application is exposed as `app` in `main.py`:
+
+```bash
+uvicorn main:app --host 0.0.0.0 --port 8000
+```
+
+If the project uses additional environment variables or a different checkpoint-loading configuration, follow the instructions in the backend code and model documentation.
+
+### 6. Explore the API
+
+When the backend is running locally, open:
+
+- API base URL: http://localhost:8000/
+- Health endpoint: http://localhost:8000/health
+- Interactive API documentation: http://localhost:8000/docs
+
+The prediction endpoints are intended for signal-based and image-based ECG classification. Refer to the backend implementation and interactive API documentation for the accepted input formats and request schemas.
 
 ## ⚠️ Limitations
 
-- The project performs binary Normal vs. Abnormal classification; it does not claim to diagnose specific diseases.
-- Predictions depend on the quality, preprocessing, and distribution of the input data.
-- ECG waveform images must be suitable for the image model; arbitrary images should not be treated as valid ECG inputs.
-- Test results do not automatically establish clinical reliability or generalization to every patient population.
-- The project is intended for educational and research purposes.
+- The task is limited to binary Normal vs. Abnormal classification.
+- The models do not identify or confirm specific diseases.
+- ConvNeXt-Tiny evaluation results require class-mapping verification.
+- Performance may depend on data quality, preprocessing, and the distribution of ECG records.
+- Experimental test results do not establish clinical reliability or generalization to every patient population.
+- Predictions and confidence scores should not be interpreted as calibrated clinical probabilities unless calibration has been independently established.
 
 ## 🔮 Future Improvements
 
-- Complete and document reproducible training pipelines.
-- Compare Signal CNN and ConvNeXt-Tiny using consistent evaluation procedures.
-- Add confusion matrices and metric visualizations.
-- Improve input validation and error handling.
-- Provide a reproducible inference interface.
-- Explore further validation on suitable independent datasets.
+- Verify and finalize the image-model evaluation.
+- Improve signal and image preprocessing.
+- Explore hyperparameter optimization.
+- Improve prediction interface usability.
+- Investigate explainable AI methods.
+- Explore multiclass ECG classification and additional independent evaluation.
 
-## 👩‍💻 Project Information
+## 📚 References and Resources
 
-**Project:** CardioFusion AI  
-**Domain:** Deep Learning / Healthcare AI  
-**Task:** 12-lead ECG Normal vs. Abnormal classification  
-**Models:** Signal CNN and ConvNeXt-Tiny  
-**Dataset:** PTB-XL
+- **GitHub repository:** https://github.com/ureedabalouch/CardioFusion-AI
+- **PTB-XL dataset:** https://physionet.org/content/ptb-xl/
+- **ConvNeXt-Tiny checkpoint:** https://huggingface.co/ureedabalouch/cardiofusion-convnext-tiny
 
-## 📄 License
+## 📄 Project Information
 
-The repository's license should be selected before public release. The PTB-XL dataset has its own licensing and attribution requirements; consult the official dataset page before redistributing any dataset files.
+- **Project name:** CardioFusion AI
+- **Domain:** Deep Learning / Healthcare AI
+- **Task:** 12-lead ECG Normal vs. Abnormal classification
+- **Models:** Signal CNN and ConvNeXt-Tiny
+- **Dataset:** PTB-XL
 
 ---
 
-**Disclaimer:** CardioFusion AI is an academic research project and is not a medical device. Its predictions must not be used as the sole basis for medical decisions.
+*CardioFusion AI — Building a foundation for AI-assisted ECG analysis.*
+
